@@ -1,0 +1,112 @@
+<style type="text/css">
+    .login-box {
+        background-color: #FFFFFF;
+        /*border: 1px solid #E5E5E5;*/
+        border-radius: 10px 10px 10px 10px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        background-image: url('<%= asset_path("login_box.png") %>');
+        /*background: transparent;*/
+        margin: 90px auto 0;
+        width: 455px;
+        height: 327px;
+        padding: 19px 29px 29px;
+
+    }
+
+    .logo {
+        margin: 24px 0px 6px 150px;
+    }
+
+    .l-table {
+        margin: 20px 0px 0px 55px;
+    }
+
+    .l-table td {
+        line-height: 55px;
+        height: 55px;
+        font-size: 16px;
+        padding: 0px;
+        margin: 0px;
+
+    }
+
+    .l-table td input {
+        height: 36px;
+        line-height: 36px;
+        width: 260px;
+        font-size: 16px;
+        border-radius: 3px;
+        border: 1px solid #ff9900;
+        margin-top: 5px;
+        /*box-shadow: 0px 0px 1px #ff9900;*/
+    }
+
+    textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+        border-color: #ff9900;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #ff9900;
+        outline: 0 none;
+    }
+
+    body {
+        background-image: url('<%= asset_path("login-bg2.png")%>');
+        background-repeat: repeat;
+    }
+
+    .btn-large {
+        padding: 4px 15px;
+        font-size: 14px;
+        border-color: #c9c9c9;
+        color: #666666;
+        border-radius: 4px;
+        margin-left: 10px;
+        background-image: url('<%= asset_path("bt-bg.png") %>');
+        background-repeat: repeat-x;
+    }
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+        /*background-image: url('/images/bt-bg.png'); background-repeat: repeat-x;*/
+        background-repeat: repeat-x;
+        background-color: #ff9900;
+        border-color: #c9c9c9;
+        color: #444444;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    }
+
+</style>
+<script type="text/javascript">
+
+    function clear_text() {
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+    }
+
+</script>
+<form class="login-box" method="post" action="session">
+  <div>
+    <img src='<%= asset_path("logo3.png") %>' alt="" class="logo" width="180">
+  </div>
+  <table class="l-table">
+    <tr>
+      <td align="right">用户名：</td>
+      <td><input type="text" name="username" id="username" width="160"></td>
+    </tr>
+    <tr>
+      <td align="right">密码：</td>
+      <td><input type="password" name="password" id="password" width="160"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td align="right">
+        <img id="loading" name="loading" src='<%= asset_path("image_uploading.gif") %>' alt="" style="display: none;">
+        <button id="sb" class="btn btn-large btn-primary" type="button" onclick="loginOnClick()">登录</button>
+        <button class="btn btn-large btn-primary" type="button" onclick="clear_text()">重置</button>
+      </td>
+    </tr>
+  </table>
+
+
+  <!--<button class="btn btn-large btn-primary" type="submit">登录</button>-->
+
+
+</form>
+

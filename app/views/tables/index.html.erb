@@ -1,0 +1,96 @@
+<%= display_header(NAV1[:table]) %>
+<%= display_nav_tables() %>
+
+
+
+<script type="text/javascript">
+    var validateRoot = "http://" + document.location.host;
+    function typeSelect(n) {
+        var uri = validateRoot + "/tables/select_type?type=" + n;
+        var xmlHttp = null;
+        if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+            xmlHttp = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject) {// code for IE6, IE5
+            xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
+        }
+        if (xmlHttp != null) {
+            xmlHttp.open("GET", uri, false);
+            xmlHttp.send(null);
+            return true;
+        }
+        else {
+            alert('Your browser does not support XMLHTTP.');
+            return false
+        }
+    }
+
+</script>
+
+<div
+<% if flash[:notice] %> class="alert"
+<% end %>>
+  <%= flash[:notice] %>
+</div>
+<div class="title-main">
+  <div class="title-left">
+
+    <% if session[:table_type] == 1 %>
+        空闲
+    <% elsif session[:table_type]== 2 %>
+        占用
+    <% elsif session[:table_type] == 3 %>
+        预定
+    <% else %>
+        全部
+    <% end %>
+  </div>
+  <div class="title-right">
+    <%= link_to '添加桌子', '/tables/new', :method => :get, :class => 'btn btn-large' %>
+  </div>
+</div>
+
+
+
+
+<div style="clear: both; ">
+  <% if @list.count > 0 %>
+      <table class="table table-striped table-bordered">
+        <thead>
+        <th width="15%">桌号</th>
+        <th width="20%">适合人数</th>
+        <th>当前状态</th>
+        <th>删除</th>
+        </thead>
+        <% @list.each do |l| %>
+            <tr>
+              <td>
+                <%= link_to l.number, "/tables/#{l.id}" %>
+              </td>
+
+              <td>
+                <%= l.size %>
+              </td>
+              <td>
+                <% if l[:status].to_i == 0 %>
+                    空闲
+                <% elsif l[:status].to_i == 1 %>
+                    占用
+                <% elsif l[:status].to_i == 2 %>
+                    预定
+                <% else %>
+                    其他
+                <% end %>
+              </td>
+              <td>
+                <%= link_to '删除', "/tables/#{l.id}", :method => :delete, data: {confirm: '确定要删除吗?'} %>
+              </td>
+            </tr>
+        <% end %>
+      </table>
+      <%= will_paginate @list, :previous_label => '上一页', :next_label => '下一页' %>
+  <% else %>
+      <div class="main-container">没有找到数据</div>
+
+  <% end %>
+</div>

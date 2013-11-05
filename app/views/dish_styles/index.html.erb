@@ -1,0 +1,108 @@
+<%= display_header(NAV1[:dish]) %>
+<%= display_nav_dishes %>
+
+
+<script type="text/javascript">
+    var validateRoot = "http://" + document.location.host;
+    function typeSelect(n) {
+        var uri ="/dishes/select_type?type=" + n;
+        var xmlHttp = null;
+        if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+            xmlHttp = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject) {// code for IE6, IE5
+            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        if (xmlHttp != null) {
+            xmlHttp.open("GET", uri, false);
+            xmlHttp.send(null);
+            return true;
+        }
+        else {
+            alert("Your browser does not support XMLHTTP.");
+            return false
+        }
+    }
+</script>
+<div
+<% if flash[:notice] %> class="alert"
+<% end %>>
+  <%= flash[:notice] %>
+</div>
+<div class="title-main">
+  <div class="title-left">
+    <% if @type_list.blank? %>
+        暂无分类
+    <% else %>
+        <%= @type_list[session[:dish_type]].name %>
+    <% end %>
+  </div>
+  <div class="title-right">
+    <%= link_to '添加新菜品', '/dishes/new', :method => :get, :class => 'btn btn-large' %>
+  </div>
+</div>
+
+
+<!--t.string   "name"-->
+<!--t.integer  "dish_type_id"-->
+<!--t.integer  "price"-->
+<!--t.integer  "dish_style_id"-->
+<!--t.string   "remarks"-->
+<!--t.integer  "status"-->
+<!--t.integer  "count"-->
+<!--t.datetime "cost_time"-->
+<!--t.string   "imageUrl"-->
+<!--t.datetime "created_at"-->
+<!--t.datetime "updated_at"-->
+<!--t.float    "sales"-->
+
+<div style="clear: both; ">
+  <% if @list.count > 0 %>
+      <table class="table table-striped table-bordered">
+        <thead>
+        <th width="15%">菜品</th>
+        <th width="20%">价格</th>
+        <th width="20%">菜系</th>
+        <th>详细说明</th>
+        <th>当前状态</th>
+        <th>删除</th>
+        </thead>
+        <% @list.each do |l| %>
+            <tr>
+              <td>
+                <%= link_to l.name, "/dishes/#{l.id}" %>
+              </td>
+
+              <td>
+                <%= l.price %>元
+              </td>
+              <td>
+                <% if l.dish_style.blank? %>
+                    未分类
+                <% else %>
+                    <%= l.dish_style.name %>
+                <% end %>
+              </td>
+              <td>
+                <%= l.remarks %>
+              </td>
+              <td>
+                <% if l.status == 1 %>
+                    可点
+                <% else %>
+                    售完
+                <% end %>
+              </td>
+              <td>
+                <%= link_to '删除', "/dishes/#{l.id}", :method => :delete, data: {confirm: '确定要删除吗?'} %>
+              </td>
+            </tr>
+        <% end %>
+
+      </table>
+      <%= will_paginate @list, :previous_label => '上一页', :next_label => '下一页' %>
+  <% else %>
+      <div class="main-container">没有找到数据</div>
+
+  <% end %>
+</div>

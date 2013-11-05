@@ -1,0 +1,251 @@
+<%= display_header(NAV1[:dish]) %>
+<%= display_nav_dishes %>
+
+
+
+<script type="text/javascript">
+    var validateRoot = "http://" + document.location.host;
+    $(document).ready(function () {
+
+        //解析remarks
+        var remarks = $("#dish_remarks").val().replace(/ /g, '&nbsp;').replace(/\n/g, '<br/>');
+        $("#div_detail").append(remarks);
+
+    })
+
+    function typeSelect(n) {
+        var uri = validateRoot + "/tables/select_type?type=" + n;
+        var xmlHttp = null;
+        if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+            xmlHttp = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject) {// code for IE6, IE5
+            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        if (xmlHttp != null) {
+            xmlHttp.open("GET", uri, false);
+            xmlHttp.send(null);
+            return true;
+        }
+        else {
+            alert("Your browser does not support XMLHTTP.");
+            return false
+        }
+    }
+
+
+    function validate(id) {
+        var view = document.getElementById(id);
+        var value = view.value == null ? 0 : view.value;
+        if (isNaN(value)) {
+            $('#alert').show().find('strong').text("包含非数字的字符！");
+            document.getElementById(id).focus();
+        }
+        else
+            $('#alert').hide();
+    }
+
+    //添加图片资源上传，以后试用ajax做
+    function add_image_to_div(image_path) {
+        $("#dish_image").attr('src', image_path);
+        $("#dish_imageUrl").attr("value", image_path)
+    }
+    function popupDiv(div_id) {
+// 获取传入的DIV
+        var $div_obj = $("#" + div_id);
+// 计算机屏幕高度
+        var windowWidth = $(window).width();
+// 计算机屏幕长度
+        var windowHeight = $(window).height();
+// 取得传入DIV的高度
+        var popupHeight = $div_obj.height();
+// 取得传入DIV的长度
+        var popupWidth = $div_obj.width();
+// 显示弹出的DIV
+        $div_obj.css({
+            "position": 'absloute'
+        }).animate({
+                    left: windowWidth / 2 - popupWidth / 2,
+                    top: windowHeight / 2 - popupHeight / 2,
+                    opacity: "show"
+                }, "slow");
+
+    }
+    //隐藏弹出DIV
+    function hideDiv(div_id) {
+        $("#" + div_id).animate({
+            left: 0,
+            top: 0,
+            opacity: "hide"
+        }, "slow");
+    }
+
+    //判断是否是图片格式
+
+    //ajax异步提交表单  完成之后可以试用data["image_path"]来获取路径
+    function ajaxFileUpload() {
+//        if(!/\.(jpg|jpeg|png)$/i.test($("#file_upload").value))
+//        {
+//            alert("图片类型必须是jpeg,jpg,png中的一种");
+//            return false;
+//        }id="image_div"
+        $("#image_div").hide();
+        $("#image_uploading").show();
+        $.ajaxFileUpload({
+            url: '/dishes/image_upload',
+            secureuri: true,
+            fileElementId: 'file_upload',
+            dataType: 'json',
+            success: function (data, status) {
+                add_image_to_div(data["image_path"]);
+                $("#image_uploading").hide();
+                hideDiv("image_pop_div");
+                $('#alert').hide();
+                $("#image_div").show();
+            },
+            error: function (data, status, e) {
+                $('#alert').show().find('strong').text(e.toString());
+                $("#image_uploading").hide();
+                $("#image_div").show();
+            }
+        });
+        return false;
+    }
+
+    function before_submit() {
+        var remarks = $("#div_detail").html();
+        remarks = remarks.replace(/&nbsp;/g, " ").replace(/<br>/g, "\n");
+        $("#dish_remarks").val(remarks);
+        return true;
+    }
+
+
+</script>
+
+<style>
+    .pop-box {
+        /*弹出窗口后，弹出的DIV采用此CSS，保证置于最上层
+        z-index控制Z轴的坐标，数值越大，离用户越近
+        */
+        z-index: 9999999; /*这个数值要足够大，才能够显示在最上层*/
+        margin-bottom: 3px;
+        display: none;
+        position: absolute;
+        background: #f5f5f5;
+        border: 1px solid lightgrey;
+    }
+
+
+</style>
+
+<!--t.string   "name"-->
+<!--t.integer  "dish_type_id"-->
+<!--t.integer  "price"-->
+<!--t.integer  "dish_style_id"-->
+<!--t.string   "remarks"-->
+<!--t.integer  "status"-->
+<!--t.integer  "count"-->
+<!--t.datetime "cost_time"-->
+<!--t.string   "imageUrl"-->
+<!--t.datetime "created_at"-->
+<!--t.datetime "updated_at"-->
+<!--t.float    "sales"-->
+
+
+<div class="title-main">
+  <div class="title-left">
+    修改菜品
+  </div>
+  <div class="title-right">
+  </div>
+</div>
+
+<div class="main-container">
+  <div style="float: left;clear: both;">
+
+    <%= form_for @dish, :url => {:action => 'update'}, :html => {:class => 'nifty_form', :multipart => true} do |f| %>
+        <table>
+          <tr>
+            <td colspan="2">
+              <div
+              <% if flash[:msg] %> class="alert"
+              <% end %>>
+                <%= flash[:msg] %>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>菜名:</td>
+            <td><%= f.text_field :name, :value => @dish.name, :style => 'width:300px;' %></td>
+          </tr>
+          <tr>
+            <td>类别:</td>
+            <td>
+              <%= f.select :dish_type_id, @type_list.map { |u| [u.name, u.id] } %>
+            </td>
+          </tr>
+          <tr>
+            <td>菜系:</td>
+            <td>
+              <%= f.select :dish_style_id, @dish_style_list.map { |u| [u.name, u.id] } %>
+            </td>
+          </tr>
+          <tr>
+            <td>价格:</td>
+            <td><%= f.text_field :price, :value => @dish.price, :style => 'width:60px;', :onchange => 'validate(this.id)' %>
+              元
+            </td>
+          </tr>
+          <tr>
+            <td>做菜耗时:</td>
+            <td>
+              <%= f.text_field :cost_time, :value => @dish.cost_time, :style => 'width:60px;', :onchange => 'validate(this.id)' %>
+              分钟
+            </td>
+          </tr>
+          <tr>
+            <td>详细介绍:</td>
+            <td>
+              <div id="div_detail" style="width: 450px;clear:both;word-break: break-all;word-wrap: break-word; min-height: 100px; border: 1px solid #CCCCCC;" contenteditable="true"></div>
+              <%= f.hidden_field :remarks, :value => @dish.remarks %>
+            </td>
+          </tr>
+
+
+          <td></td>
+          <td>
+            <div style='margin-left: 60px;margin-top: 20px;'>
+              <input type='submit' value='保存' class='btn btn-large btn-primary' id="all_send" onclick="return before_submit();"/>
+            </div>
+          </td>
+          </tr>
+          <%= f.hidden_field :imageUrl, :value => @dish.imageUrl %>
+        </table>
+    <% end %>
+  </div>
+  <div style="float: right;">
+    宣传照片:<input type="button" onclick="popupDiv('image_pop_div')" value="宣传图片添加">
+      <span>
+         <div id="photo_content" style="width: 200px;word-break: break-all;word-wrap: break-word; min-height: 200px; border: 1px solid #CCCCCC;">
+           <img id="dish_image" name="dish_image" alt='image' width='200' height='200' src=<%= @dish.imageUrl %>>
+         </div>
+      </span>
+  </div>
+
+
+  <div id="image_pop_div" class="pop-box" style="width: 600px; height: 300px;">
+    <div id="image_div" style="width: 380px; margin: 0 auto; margin-top: 20px;">
+      <div style="width: 70px; margin: 0 auto; margin-top: 5px; margin-bottom: 10px;">图片上传</div>
+      <input type="file" id="file_upload" name="file_upload"/>
+      <input value="上传" type="button" onclick="return ajaxFileUpload();"/>
+      <input type="button" onclick="hideDiv('image_pop_div')" value="返回"/>
+    </div>
+    <div id="image_uploading" style=" margin: 0 auto;margin-top: 50px; width: 100px;display: none;">
+      正在上传中<img src='<%= asset_path('image_uploading.gif') %>' alt="上传中"/>
+    </div>
+  </div>
+
+</div>
+
+
+

@@ -1,0 +1,210 @@
+<%= display_header(NAV1[:dish]) %>
+<%= display_nav_dishes %>
+
+
+<script type="text/javascript">
+    var validateRoot = "http://" + document.location.host;
+    function typeSelect(n) {
+        var uri = validateRoot + "/dishes/select_type?type=" + n;
+        var xmlHttp = null;
+        if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
+            xmlHttp = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject) {// code for IE6, IE5
+            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        if (xmlHttp != null) {
+            xmlHttp.open("GET", uri, false);
+            xmlHttp.send(null);
+            return true;
+        }
+        else {
+            alert("Your browser does not support XMLHTTP.");
+            return false
+        }
+    }
+</script>
+
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0
+    }
+
+    ul, li {
+        list-style: none
+    }
+
+    .box {
+        width: 1000px;
+        height: 500px;
+        border: 1px solid #ccc;
+        margin: 10px;
+        font-size: 12px;
+        font-family: Verdana, Arial, Helvetica, sans-serif
+    }
+
+    .tagMenu {
+        height: 28px;
+        line-height: 28px;
+        background: #efefef;
+        position: relative;
+        border-bottom: 1px solid #999
+    }
+
+    .tagMenu h2 {
+        font-size: 12px;
+        padding-left: 10px;
+    }
+
+    .tagMenu ul {
+        position: absolute;
+        left: 100px;
+        bottom: -1px;
+        height: 26px;
+    }
+
+    ul.menu li {
+        float: left;
+        margin-bottom: 1px;
+        line-height: 16px;
+        height: 14px;
+        margin: 5px 0 0 -1px;
+        border-left: 1px solid #999;
+        text-align: center;
+        padding: 0 12px;
+        cursor: pointer
+    }
+
+    ul.menu li.current {
+        border: 1px solid #999;
+        border-bottom: none;
+        background: #fff;
+        height: 25px;
+        line-height: 26px;
+        margin: 0
+    }
+
+    .content {
+        padding: 10px
+    }
+
+    img {
+        border: 1px solid lightgrey
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    function return_index() {
+        window.history.back()
+    }
+
+</script>
+
+<!--t.string   "name"-->
+<!--t.integer  "dish_type_id"-->
+<!--t.integer  "price"-->
+<!--t.integer  "dish_style_id"-->
+<!--t.string   "remarks"-->
+<!--t.integer  "status"-->
+<!--t.integer  "count"-->
+<!--t.datetime "cost_time"-->
+<!--t.string   "imageUrl"-->
+<!--t.datetime "created_at"-->
+<!--t.datetime "updated_at"-->
+<!--t.float    "sales"-->
+
+
+<div class="title-main">
+  <div class="title-left">
+    菜品详情
+  </div>
+  <div class="title-right">
+    <button class="btn btn-large btn-navbar" type="submit" onclick="return_index()">返回</button>
+    <%= link_to '修改', "/dishes/#{@dish.id}/edit", :method => :get, :class => 'btn btn-large btn-primary' %>
+  </div>
+</div>
+<div class="main-container">
+  <div
+  <% if flash[:notice] %> class="alert"
+  <% end %>>
+    <%= flash[:notice] %>
+  </div>
+  <div style="clear: both;margin-top: 50px;">
+    <table id="show_coupon" class="table  table-condensed" style="table-layout:fixed;width: 500px; float:left;">
+      <tr>
+        <td width="100">菜名:</td>
+        <td><%= @dish.name %></td>
+      </tr>
+      <tr>
+        <td width="100" align="center">类别:</td>
+        <td width="50">
+          <div id="div_type">
+            <%= @dish.dish_type.name %>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td width="100">菜系:</td>
+        <td>
+          <% if @dish.dish_style.blank? %>
+              未知
+          <% else %>
+              <%= @dish.dish_style.name %>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td width="100">价格:</td>
+        <td>
+          <%= @dish.price %>元
+        </td>
+      </tr>
+      <tr>
+        <td width="100">做菜耗时:</td>
+        <td>
+          <% if @dish.cost_time.blank? %>
+              暂未计算
+          <% else %>
+              <%= @dish.cost_time %> 分钟
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td width="100">详细介绍:</td>
+        <td>
+          <%= @dish.remarks %>
+        </td>
+      </tr>
+      <tr>
+        <td width="100">当前状态:</td>
+        <td>
+          <% if @dish.status == 1 %>
+              可点
+          <% else %>
+              售完
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td width="100">历史点击次数:</td>
+        <td>
+          <%= @dish.count %>
+        </td>
+      </tr>
+      <div style="float: right;">
+        宣传照片:
+      <span>
+         <div id="photo_content" style="width: 200px;word-break: break-all;word-wrap: break-word; min-height: 200px; border: 1px solid #CCCCCC;">
+           <img alt='image' width='200' height='200' src=<%= @dish.imageUrl %>>
+         </div>
+      </span>
+      </div>
+    </table>
+
+
+  </div>
+
+</div>

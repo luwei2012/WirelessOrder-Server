@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>无限点餐系统</title>
+
+
+<%= javascript_include_tag "jquery-1.8.2.min" %>
+<%= javascript_include_tag "jquery.form" %>
+<%= javascript_include_tag "bootstrap.min.js" %>
+<%= javascript_include_tag "application" %>
+<%= javascript_include_tag "ajaxfileupload" %>
+
+<%= stylesheet_link_tag "application", :media => "all" %>
+<%= stylesheet_link_tag "bootstrap.min.css" %>
+<%= stylesheet_link_tag "bootstrap-responsive.min" %>
+<!-- Force latest IE rendering engine or ChromeFrame if installed -->
+<!--[if IE]>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+<style type="text/css">
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        overflow: scroll;
+    }
+
+    .sidebar-nav {
+        padding: 9px 0;
+    }
+
+    html {
+        overflow: -moz-scrollbars-vertical;
+        overflow: scroll;
+        overflow: visible;
+    }
+
+    .nav-header-bg {
+        background-image: url('<%= asset_path("header_bg.png") %>');
+        background-repeat: repeat-x;
+        background-color: white;
+        height: 76px;
+
+    }
+
+    .logo {
+        float: left;
+    }
+
+    .add-header-width {
+        margin-top: 70px;
+        margin-left: 15px;
+    }
+
+    a:hover {
+        background-color: transparent;
+    }
+
+    .nav-dis {
+        margin: 27px 0px 10px 50px;
+        float: left;
+    }
+
+    .nav-dis > ul {
+        font-size: 16px;
+    }
+
+    .nav-dis > ul > li.active a {
+        background-image: url('<%= asset_path("nav-line.png") %>');
+        background-repeat: repeat-x;
+        background-position: bottom;
+    }
+
+    .navbar .nav > li > a:hover {
+        background-image: url('<%= asset_path("nav-line.png") %>');
+        background-repeat: repeat-x;
+        background-position: bottom;
+        background-color: transparent;
+        box-shadow: none;
+        color: #ff9900;
+    }
+
+    .navbar .nav > li > a {
+        padding: 7px 4px;
+        margin: 3px 11px;;
+        color: #000;
+        font-weight: normal;
+    }
+
+    .navbar .nav > .active > a, .navbar .nav > .active > a:hover, .navbar .nav > .active > a:focus {
+        background-color: transparent;
+        box-shadow: none;
+        color: #ff9900;
+    }
+
+    .well {
+        box-shadow: none;
+        border-radius: 0px;
+        border-color: #bfbfbf;
+        background-color: #ffffff;
+        padding: 0px;
+        left: 100px;
+    }
+
+    .nav-list {
+        padding: 0px;
+    }
+
+    .nav-list > li {
+        font-size: 14px;
+        color: #000;
+        font-weight: normal;
+        height: 45px;
+        line-height: 45px;
+        padding: 0px;
+        margin: 0px;
+        border-bottom: dashed 1px #c0c0c0;
+
+    }
+
+    .nav-list > li:last-child {
+        border-bottom: dashed 0px #c0c0c0;
+    }
+
+    .nav-list .nav-header {
+        font-size: 14px;
+        color: #b5b5b5;
+        font-weight: normal;
+        height: 45px;
+        line-height: 45px;
+        left: 0px;
+        margin: 0px;
+        padding: 0px 0px 0px 6px;
+
+        border-bottom: dashed 1px #c0c0c0;
+        background: transparent;
+    }
+
+    .nav-list > li > a {
+        margin: 0px;
+        color: #000;
+        padding: 0px 30px 0px 37px;
+        background: url('<%= asset_path("nav-inactive-cusor.png") %>') no-repeat;
+        background-origin: content-box;
+        background-position: right center;
+        background-color: transparent;
+    }
+
+    .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
+        background: url('<%= asset_path("nav-active-cusor.png") %>') no-repeat;
+        background-origin: content-box;
+        background-position: right center;
+        background-color: transparent;
+        /*-moz-background-position: right 30px center;*/
+        /*-webkit-background-position: right 30px center 0px;*/
+        /*-khtml-background-position: right center 30px ;*/
+        /*-o-user-background-position: right center 30px ;*/
+        background-color: transparent;
+
+    }
+
+    .row-fluid .span3 {
+        width: 15%;
+    }
+
+    .row-fluid [class*="span"] {
+        margin-left: 3%;
+    }
+
+    .row-fluid .span9 {
+        width: 80%;
+    }
+
+    .nav-list > .active {
+        background-image: url('<%= asset_path("nav2-bg.png") %>');
+        background-repeat: repeat-x;
+        background-position: right 20px center;
+        background-color: transparent;
+
+    }
+</style>
+<style type="text/css">
+    .title-main {
+        font-size: 16px;
+        height: 40px;
+        line-height: 40px;
+        padding: 0px 10px 0px 10px;
+        background-image: url('<%= asset_path("content-title.png") %>');
+        background-repeat: repeat-x;
+
+        border-width: 1px 1px 0px 1px;
+        border-color: #bfbfbf;
+        border-style: solid;
+
+    }
+
+    .title-main .title-left {
+
+        float: left;
+        width: 50%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+    }
+
+    .title-main .title-right {
+        /*width: 300px;*/
+        float: right;
+        text-align: right;
+        /*height: 40px;*/
+    }
+
+    .btn-large {
+        padding: 4px 9px;
+        font-size: 12px;
+        border-color: #393a3a;
+        color: #444444;
+        border-radius: 10px;
+        background-image: url('<%= asset_path("bt-bg.png") %>');
+        background-repeat: repeat-x;
+        margin-bottom: 4px;
+    }
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+        background-color: #ff9900;
+        border-color: #c9c9c9;
+        color: #444444;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+
+    }
+
+    .table-bordered {
+        moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-collapse: separate;
+        border-color: #bfbfbf;
+        border-image: none;
+        border-radius: 0px;
+        border-style: solid;
+        border-width: 0px 1px 1px 0px;
+    }
+
+    .table-bordered thead:first-child tr:first-child > th:first-child, .table-bordered tbody:first-child tr:first-child > td:first-child, .table-bordered tbody:first-child tr:first-child > th:first-child {
+        border-top-left-radius: 0px;
+        border-left: 1px solid #bfbfbf;
+    }
+
+    .table-bordered thead:last-child tr:last-child > th:first-child, .table-bordered tbody:last-child tr:last-child > td:first-child, .table-bordered tbody:last-child tr:last-child > th:first-child, .table-bordered tfoot:last-child tr:last-child > td:first-child, .table-bordered tfoot:last-child tr:last-child > th:first-child {
+        border-bottom-left-radius: 0 PX;
+        border-left: 1px solid #bfbfbf;
+    }
+
+    .table th, .table td {
+        border-top: 1px solid #bfbfbf;
+        line-height: 20px;
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+
+    .table-bordered th, .table-bordered td {
+        border-left: 1px solid #bfbfbf;
+
+    }
+
+    .table-bordered a:hover {
+        color: #000;
+    }
+
+    .main-container {
+        moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-collapse: separate;
+        border-color: #bfbfbf;
+        border-image: none;
+        border-radius: 0px;
+        border-style: solid;
+        border-width: 0px 1px 1px 1px;
+        clear: both;
+        text-align: left;
+        padding: 25px 45px 25px 45px;
+        overflow: auto;
+    }
+
+    a img {
+        border: none;
+    }
+
+
+</style>
+
+<%= csrf_meta_tags %>
+
+</head>
+
+
+<body>
+<div class="navbar nav-header-bg navbar-fixed-top">
+  <div>
+    <div class="container-fluid">
+
+      <a class="logo" href="#"><img src='<%= asset_path("logo2.png") %>' width="130" style="margin-top:14px;margin-left:30px;"/></a>
+
+      <div class="nav-collapse collapse  nav-dis">
+        <ul class="nav">
+          <%= yield(:nav) %>
+        </ul>
+      </div>
+      <div style="float: right;">
+        <span style="float: left;margin-right: 6px;"><a href="/authorities/<%= session[:user_id] %>" style="vertical-align: middle;width: 40px;" title="个人信息"><img src='<%= asset_path("profile.png") %>'/></a></span>
+        <span style="float: left;"><a href="/authorities/logout" style="vertical-align: middle;width: 40px; " title="退出"><img src='<%= asset_path("logout.png") %>' border="0"/></a>  </span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid  add-header-width">
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+          <%= yield(:nav2) %>
+
+        </ul>
+      </div>
+      <!--/.well -->
+    </div>
+    <!--/span-->
+    <div class="span9" style="min-height: 480px;">
+
+      <%= yield %>
+
+
+    </div>
+  </div>
+
+
+  <hr>
+  <footer>
+    <p>&copy; 优雅科技 2013</p>
+  </footer>
+</div>
+<!--/.fluid-container-->
+<script type="text/javascript">
+    $(function () {
+        if ($.browser.msie && parseInt($.browser.version, 10) === 6) {
+            $('.row div[class^="span"]:last-child').addClass("last-child");
+            $('[class="span"]').addClass("margin-left-20");
+            $(':button[class="btn"], :reset[class="btn"], :submit[class="btn"], input[type="button"]').addClass("button-reset");
+            $(":checkbox").addClass("input-checkbox");
+            $('[class^="icon-"], [class=" icon-"]').addClass("icon-sprite");
+            $(".pagination li:first-child a").addClass("pagination-first-child")
+        }
+    })
+</script>
+
+</body>
+</html>

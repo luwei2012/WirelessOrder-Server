@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>无限点餐系统</title>
+
+  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+
+  <style type="text/css">
+
+      body {
+          padding-top: 40px;
+          padding-bottom: 40px;
+          background-color: #f5f5f5;
+      }
+
+      .form-signin {
+          max-width: 300px;
+          padding: 19px 29px 29px;
+          margin: 0 auto 20px;
+          background-color: #fff;
+          border: 1px solid #e5e5e5;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+          -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+          -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+          box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      }
+      .form-signin .form-signin-heading,
+      .form-signin .checkbox {
+          margin-bottom: 10px;
+      }
+      .form-signin input[type="text"],
+      .form-signin input[type="password"] {
+          font-size: 16px;
+          height: auto;
+          margin-bottom: 15px;
+          padding: 7px 9px;
+      }
+
+  </style>
+  <script type="text/javascript">
+      (function ($) {
+          $(document);
+      }(jQuery));
+
+      $(document).ready(function(){
+          var isIE = !!window.ActiveXObject;
+          var isIE6=isIE&&!window.XMLHttpRequest;
+          var isIE8=isIE&&document.documentMode;
+          var isIE7=isIE&&!isIE6&&!isIE8;
+
+          if(isIE){
+              if (isIE6 || isIE7){
+                  if(confirm("你正在使用 Internet Explorer 的过期版本，某些功能可能无法正常使用。建议您升级到IE8及其以上版本")){
+                      window.location.href='http://windows.microsoft.com/zh-cn/internet-explorer/download-ie';
+                  }
+              }
+          }
+      })
+  </script>
+</head>
+<body>
+
+<%= yield %>
+<script type="text/javascript">
+    $(function(){if($.browser.msie&&parseInt($.browser.version,10)===6){$('.row div[class^="span"]:last-child').addClass("last-child");$('[class="span"]').addClass("margin-left-20");$(':button[class="btn"], :reset[class="btn"], :submit[class="btn"], input[type="button"]').addClass("button-reset");$(":checkbox").addClass("input-checkbox");$('[class^="icon-"], [class=" icon-"]').addClass("icon-sprite");$(".pagination li:first-child a").addClass("pagination-first-child")}})
+</script>
+</body>
+</html>
