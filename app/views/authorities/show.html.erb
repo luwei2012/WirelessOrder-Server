@@ -1,0 +1,56 @@
+<%= display_header(NAV1[:admin_info]) %>
+<%= display_user_info %>
+
+<script type="text/javascript">
+    function return_index() {
+        var root_url = "http://" + document.location.host;
+        self.location = root_url + "/authorities";
+    }
+
+</script>
+
+
+<div class="title-main">
+  <div class="title-left">
+    详细信息
+  </div>
+  <div class="title-right">
+    <% if session[:role] == ROLE_NAME[User::NORMAL_ADMIN] %>
+        <%= link_to '修改个人密码', "/authorities/#{@user.id}/edit", :method => :get, :class => 'btn btn-large btn-primary' %>
+        <%= link_to '返回首页', '/tables/', :method => :get, :class => 'btn btn-large btn-primary' %>
+    <% elsif session[:role] == ROLE_NAME[User::SUPER_ADMIN] %>
+        <% if @user.role != ROLE_NAME[User::SUPER_ADMIN] %>
+            <%= link_to '修改管理员信息', "/authorities/#{@user.id}/edit", :method => :get, :class => 'btn btn-large btn-primary' %>
+        <% end %>
+        <button class="btn btn-large btn-navbar" type="submit" onclick="return_index()">返回管理员列表</button>
+
+    <% end %>
+  </div>
+</div>
+<div class="main-container">
+  <div
+  <% if flash[:notice] %> class="alert"
+  <% end %>>
+    <%= flash[:notice] %>
+  </div>
+  <div style="clear: both;margin-top: 20px;">
+    <table id="show_message" class="table " style="width: 700px;">
+
+      <tr>
+        <td width="100">系统登陆名(账号):</td>
+        <td><%= @user.account %></td>
+      </tr>
+      <tr>
+        <td width="100">密码:</td>
+        <td width="50">
+          <%= @user.password %>
+        </td>
+      </tr>
+      <tr>
+        <td width="100">创建时间:</td>
+        <td> <%= @user.created_at.strftime('%Y年%m月%d日   %H:%M:%S') %></td>
+      </tr>
+    </table>
+
+  </div>
+</div>

@@ -1,17 +1,17 @@
-<%= display_header(NAV1[:dish_style]) %>
+<%= display_header(NAV1[:dish_type]) %>
 
 
 <script type="text/javascript">
     $(document).ready(function () {
         //解析describe
-        var describe = $("#dish_style_describe").val().replace(/ /g, '&nbsp;').replace(/\n/g, '<br/>');
+        var describe = $("#dish_type_describe").val().replace(/ /g, '&nbsp;').replace(/\n/g, '<br/>');
         $("#div_detail").append(describe);
 
     })
     function before_submit() {
         var describe = $("#div_detail").html();
         describe = describe.replace(/&nbsp;/g, " ").replace(/<br>/g, "\n");
-        $("#dish_style_describe").val(describe);
+        $("#dish_type_describe").val(describe);
         return true;
     }
 
@@ -41,7 +41,7 @@
 
 <div class="title-main">
   <div class="title-left">
-    新增菜系
+    新增类别
   </div>
   <div class="title-right">
   </div>
@@ -50,7 +50,7 @@
 <div class="main-container">
   <div style="float: left;clear: both;">
 
-    <%= form_for @dish_style, :url => {:action => 'create'}, :html => {:class => 'nifty_form', :multipart => true} do |f| %>
+    <%= form_for @dish_type, :url => {:action => 'create'}, :html => {:class => 'nifty_form', :multipart => true} do |f| %>
         <table>
           <tr>
             <td colspan="2">
@@ -62,15 +62,15 @@
             </td>
           </tr>
           <tr>
-            <td>菜系名称:</td>
-            <td><%= f.text_field :name, :value => @dish_style.name, :style => 'width:300px;' %></td>
+            <td>类别名称:</td>
+            <td><%= f.text_field :name, :value => @dish_type.name, :style => 'width:300px;' %></td>
           </tr>
 
           <tr>
             <td>详细介绍:</td>
             <td>
               <div id="div_detail" style="width: 450px;clear:both;word-break: break-all;word-wrap: break-word; min-height: 100px; border: 1px solid #CCCCCC;" contenteditable="true"></div>
-              <%= f.hidden_field :describe, :value => @dish_style.describe %>
+              <%= f.hidden_field :describe, :value => @dish_type.describe %>
             </td>
           </tr>
 

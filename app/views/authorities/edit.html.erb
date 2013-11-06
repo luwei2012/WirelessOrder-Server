@@ -1,0 +1,88 @@
+<%= display_header(NAV1[:admin_info]) %>
+<%= display_user_info %>
+
+<script type="text/javascript">
+    function return_index() {
+        var root_url = "http://" + document.location.host;
+        self.location = root_url + "/authorities";
+    }
+
+</script>
+<div class="title-main">
+  <div class="title-left">
+    修改管理员信息
+  </div>
+  <div class="title-right">
+    <% if session[:role] == ROLE_NAME[User::SUPER_ADMIN] %>
+        <button class="btn btn-large btn-navbar" type="submit" onclick="return_index()">返回</button>
+    <% end %>
+  </div>
+</div>
+
+
+
+<div class="main-container">
+  <%= form_for @user, :url => {:action => 'update', :id => @user.id, :method => 'put'}, :html => {:class => 'nifty_form', :multipart => true} do |f| %>
+      <table>
+        <tr>
+          <td colspan="2">
+            <div
+            <% if flash[:msg] %> class="alert"
+            <% end %>>
+              <%= flash[:msg] %>
+            </div>
+          </td>
+        </tr>
+        <% if session[:role] == ROLE_NAME[User::SUPER_ADMIN] %>
+            <tr>
+              <td>管理员种类:</td>
+              <td>
+                <% container = [[ROLE_NAME[0]], [ROLE_NAME[1]], [ROLE_NAME[2]]] %>
+                <%= f.select :role, options_for_select(container, @user.role) %>
+              </td>
+            </tr>
+            <tr>
+              <td>登陆名(账号):</td>
+              <td>
+                <%= f.text_field :account, :value => @user.account, :style => 'width:300px;' %>
+              </td>
+            </tr>
+            <tr>
+              <td>联系电话:</td>
+              <td>
+                <%= f.text_field :phone, :value => @user.phone, :style => 'width:300px;' %>
+              </td>
+            </tr>
+        <% end %>
+        <tr>
+          <td>昵称:</td>
+          <td>
+            <%= f.text_field :name, :value => @user.name, :style => 'width:300px;' %>
+          </td>
+        </tr>
+        <tr>
+          <td>旧密码:</td>
+          <td>
+            <%= f.text_field :old_password, :value => @user.password, :readonly => true, :style => 'width:300px;' %>
+          </td>
+        </tr>
+        <tr>
+          <td>新密码:(不输入默认为原来的密码)</td>
+          <td>
+            <%= f.password_field :new_password, :style => 'width:300px;' %>
+          </td>
+        </tr>
+        <tr>
+          <td>重复密码:</td>
+          <td>
+            <%= f.password_field :password_confirmation, :style => 'width:300px;' %>
+          </td>
+        </tr>
+
+      </table>
+
+      <div style="margin-left: 60px;margin-top: 20px;">
+        <%= f.submit '修改', :class => 'btn btn-large btn-primary' %>
+      </div>
+  <% end %>
+</div>

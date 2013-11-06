@@ -100,7 +100,8 @@
 <script type="text/javascript">
 
     function return_index() {
-        window.history.back()
+        var root_url = "http://"+document.location.host ;
+        self.location = root_url + "/tables";
     }
 
 </script>
@@ -126,6 +127,10 @@
       <tr>
         <td width="100">桌号:</td>
         <td><%= @table.number %></td>
+      </tr>
+      <tr>
+        <td width="100">桌名:</td>
+        <td><%= @table.name %></td>
       </tr>
       <tr>
         <td width="100" align="center">适合人数:</td>

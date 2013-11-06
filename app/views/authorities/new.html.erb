@@ -1,0 +1,100 @@
+<%= display_header(NAV1[:authority]) %>
+<% if params[:role_id] %>
+    <% if params[:role_id].to_i == 2 %>
+        <%= display_authorities(USER_ROLE_NAME[:super_admin]) %>
+    <% elsif params[:role_id].to_i == 1 %>
+        <%= display_authorities(USER_ROLE_NAME[:normal_admin]) %>
+    <% elsif params[:role_id].to_i == 0 %>
+        <%= display_authorities(USER_ROLE_NAME[:normal_user]) %>
+    <% end %>
+<% else %>
+    <%= display_authorities(USER_ROLE_NAME[:all]) %>
+<% end %>
+
+<script type="text/javascript">
+    function return_index() {
+        var root_url = "http://" + document.location.host;
+        self.location = root_url + "/authorities";
+
+    }
+
+
+</script>
+
+<div class="title-main">
+
+  <div class="title-left">
+    新增管理员
+  </div>
+  <div class="title-right">
+    <button class="btn btn-large btn-navbar" type="submit" onclick="return_index()">返回管理员列表</button>
+  </div>
+</div>
+<div style="float: right;">
+
+</div>
+<div class="main-container">
+
+
+  <%= form_for @user, :url => {:action => 'create'}, :html => {:class => 'nifty_form', :multipart => true} do |f| %>
+      <table>
+        <tr>
+          <td colspan="2">
+            <div
+            <% if flash[:msg] %> class="alert"
+            <% end %>>
+              <%= flash[:msg] %>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td> 用户名(账号):</td>
+          <td>
+            <%= f.text_field :account, :style => 'width:300px;' %>
+          </td>
+        </tr>
+        <tr>
+          <td> 昵称:</td>
+          <td>
+            <%= f.text_field :name, :style => 'width:300px;' %>
+          </td>
+        </tr>
+        <tr>
+          <td>联系电话(可选):</td>
+          <td>
+            <%= f.text_field :phone, :style => 'width:300px;' %>
+          </td>
+        </tr>
+        <tr>
+          <td>管理员种类:</td>
+          <td>
+            <% if session[:role]==[ROLE_NAME[2]] %>
+                <% container = [[ROLE_NAME[0]], [ROLE_NAME[1]], [ROLE_NAME[2]]] %>
+            <% else %>
+                <% container = [[ROLE_NAME[0]], [ROLE_NAME[1]], [ROLE_NAME[2]]] %>
+            <% end %>
+            <%= f.select :role, options_for_select(container, @user.role) %>
+          </td>
+        </tr>
+
+        <tr>
+          <td>密码:</td>
+          <td>
+            <%= f.password_field :password, :style => 'width:300px;' %>
+          </td>
+        </tr>
+        <tr>
+          <td>重复密码:</td>
+          <td>
+            <%= f.password_field :password_confirmation, :style => 'width:300px;' %>
+          </td>
+        </tr>
+
+
+      </table>
+
+      <div style="margin-left: 60px;margin-top: 20px;">
+        <%= f.submit '添加用户', :class => 'btn btn-large btn-primary' %>
+      </div>
+  <% end %>
+</div>

@@ -1,7 +1,14 @@
 # -*- encoding : utf-8 -*-
 class AuthoritiesController < ApplicationController
   def index
-
+    role_id = params[:role_id] ? params[:role_id].to_i : -1
+    page = params[:page] ? params[:page].to_i : 1
+    page_size = params[:page_size] ? params[:page_size].to_i : 15
+    if role_id==-1
+      @list = User.order('created_at desc').paginate(:page => page, :per_page => page_size)
+    else
+      @list = User.where(:role => ROLE_NAME[role_id]).order('created_at desc').paginate(:page => page, :per_page => page_size)
+    end
   end
 
 
@@ -24,6 +31,8 @@ class AuthoritiesController < ApplicationController
   def update
     @user = User.find params[:id]
     @user.account = params[:user][:account]
+    @user.role = params[:user][:role] ? params[:user][:role] : '普通用户'
+    @user.phone = params[:user][:phone]
     password = params[:user][:new_password]
     @user.password_confirmation = params[:user][:password_confirmation]
     if password.blank?
@@ -72,12 +81,13 @@ class AuthoritiesController < ApplicationController
 
   def create
     @user = User.new
-    @user.name = params[:user][:username]
-    @user.account = params[:user][:email]
+    @user.name = params[:user][:name]
+    @user.account = params[:user][:account]
     @user.password = params[:user][:password]
-    @user.phone = params[:user][:telephone]
+    @user.phone = params[:user][:phone]
+    @user.role = params[:user][:role] ? params[:user][:role] : '普通用户'
     @user.password_confirmation = params[:user][:password_confirmation]
-    user = User.find_by_username @user.account
+    user = User.find_by_account @user.account
 
     if user
       flash[:msg] = '该账号已被占用'

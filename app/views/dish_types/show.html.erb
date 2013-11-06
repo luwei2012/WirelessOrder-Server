@@ -1,4 +1,4 @@
-<%= display_header(NAV1[:dish_style]) %>
+<%= display_header(NAV1[:dish_type]) %>
 
 
 <style type="text/css">
@@ -75,7 +75,7 @@
 
     function return_index() {
         var root_url = "http://"+document.location.host ;
-        self.location = root_url + "/dish_styles";
+        self.location = root_url + "/dish_types";
     }
 
 </script>
@@ -87,11 +87,11 @@
 
 <div class="title-main">
   <div class="title-left">
-    菜系详情
+    类别详情
   </div>
   <div class="title-right">
     <button class="btn btn-large btn-navbar" type="submit" onclick="return_index()">返回</button>
-    <%= link_to '修改', "/dish_styles/#{@dish_style.id}/edit", :method => :get, :class => 'btn btn-large btn-primary' %>
+    <%= link_to '修改', "/dish_types/#{@dish_type.id}/edit", :method => :get, :class => 'btn btn-large btn-primary' %>
   </div>
 </div>
 <div class="main-container">
@@ -103,19 +103,19 @@
   <div style="clear: both;margin-top: 50px;">
     <table id="show_coupon" class="table  table-condensed" style="table-layout:fixed;width: 500px; float:left;">
       <tr>
-        <td width="100">菜系名称:</td>
-        <td><%= @dish_style.name %></td>
+        <td width="100">类别名称:</td>
+        <td><%= @dish_type.name %></td>
       </tr>
 
       <tr>
         <td width="100">详细介绍:</td>
         <td>
-          <%= @dish_style.describe %>
+          <%= @dish_type.describe %>
         </td>
       </tr>
       <tr>
         <td width="100">创建时间:</td>
-        <td> <%= @dish_style.created_at.strftime('%Y年%m月%d日   %H:%M:%S') %></td>
+        <td> <%= @dish_type.created_at.strftime('%Y年%m月%d日   %H:%M:%S') %></td>
       </tr>
     </table>
 

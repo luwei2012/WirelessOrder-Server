@@ -1,39 +1,41 @@
 # -*- encoding : utf-8 -*-
 class DishesController < ApplicationController
   before_action :set_dish, only: [:show, :edit, :update, :destroy]
+  before_action :set_dish_style_and_type, only: [:index, :show, :new, :edit]
   # GET /dishes
   # GET /dishes.json
   def index
-    if @type_list.blank?
-      @type_list=DishType.all
-    end
-    if @style_list.blank?
-      @style_list=DishStyle.all
-    end
     if session[:dish_style].blank?
       session[:dish_style]=-1
     end
     if session[:dish_type].blank?
-      session[:dish_type]=0
+      session[:dish_type]=-1
     end
     page=params[:page] ? params[:page].to_i : 1
     page_size = params[:page_size] ? params[:page_size].to_i : 15
-    if @type_list.blank?
+    if @type_list.blank? || @style_list.blank?
+      if !@type_list.blank?
+        session[:dish_type]= @type_list[0].id
+      end
       @list = []
-    elsif session[:dish_style]==-1
-      @list = @type_list[session[:dish_type]].dishes.order('id desc').paginate(:page => page, :per_page => page_size)
+    elsif session[:dish_style]==-1 && session[:dish_type]==-1
+      session[:dish_type]= @type_list[0].id
+      @list = @type_list[0].dishes.order('id desc').paginate(:page => page, :per_page => page_size)
+    elsif session[:dish_style]==-1 && session[:dish_type]!=-1
+      @list = DishType.find_by_id(session[:dish_type]).dishes.order('id desc').paginate(:page => page, :per_page => page_size)
+    elsif session[:dish_style]!=-1 && session[:dish_type]==-1
+      session[:dish_type]= @type_list[0].id
+      @list = @type_list[0].dishes.where("dish_style_id = #{session[:dish_style]}").order('id desc').paginate(:page => page, :per_page => page_size)
     else
-      @list = @type_list[session[:dish_type]].dishes.where("dish_style_id = #{session[:dish_style]}").order('id desc').paginate(:page => page, :per_page => page_size)
+      @list = DishType.find_by_id(session[:dish_type]).dishes.where("dish_style_id = #{session[:dish_style]}").order('id desc').paginate(:page => page, :per_page => page_size)
     end
+
   end
 
 
 # GET /dishes/1
 # GET /dishes/1.json
   def show
-    if @type_list.blank?
-      @type_list=DishType.all
-    end
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @dish }
@@ -42,13 +44,7 @@ class DishesController < ApplicationController
 
 # GET /dishes/new
   def new
-    if @type_list.blank?
-      @type_list=DishType.all
-    end
-    if @style_list.blank?
-      @style_list=DishStyle.all
-    end
-    @dish = @type_list[session[:dish_type]].dishes.new
+    @dish = DishType.find_by_id(session[:dish_type]).dishes.new
     if (!session[:dish_style].blank?) && session[:dish_style]!=-1
       @dish.dish_style_id=session[:dish_style]
     end
@@ -57,12 +53,7 @@ class DishesController < ApplicationController
 
 # GET /dishes/1/edit
   def edit
-    if @type_list.blank?
-      @type_list=DishType.all
-    end
-    if @style_list.blank?
-      @style_list=DishStyle.all
-    end
+
   end
 
 # POST /dishes
@@ -75,9 +66,10 @@ class DishesController < ApplicationController
     @dish.price = params[:dish][:price].to_i
     @dish.cost_time = params[:dish][:cost_time].to_i
     @dish.remarks = params[:dish][:remarks]
+    @dish.sales= params[:dish][:sales] ? params[:dish][:sales].to_f : 1.0
     @dish.imageUrl = params[:dish][:imageUrl]
-    @dish.status = 1
-    @dish.count = 0
+    @dish.status = params[:dish][:status] ? params[:dish][:status].to_i : 1
+    @dish.count = params[:dish][:count] ? params[:dish][:count].to_i : 0
 
     begin
       Dish.transaction do
@@ -113,8 +105,9 @@ class DishesController < ApplicationController
     @dish.cost_time = params[:dish][:cost_time].to_i
     @dish.remarks = params[:dish][:remarks]
     @dish.imageUrl = params[:dish][:imageUrl]
-    @dish.status = 1
-    @dish.count = 0
+    @dish.sales= params[:dish][:sales] ? params[:dish][:sales].to_f : 1.0
+    @dish.status = params[:dish][:status] ? params[:dish][:status].to_i : 1
+    @dish.count = params[:dish][:count] ? params[:dish][:count].to_i : 0
 
     begin
       Dish.transaction do
@@ -149,7 +142,7 @@ class DishesController < ApplicationController
   end
 
   def select_type
-    session[:dish_type] = params[:type].to_i
+    session[:dish_type] = params[:type] ? params[:type].to_i : -1
     render :json => {result: :success}
   end
 
@@ -197,6 +190,15 @@ class DishesController < ApplicationController
 # Use callbacks to share common setup or constraints between actions.
   def set_dish
     @dish = Dish.find(params[:id])
+  end
+
+  def set_dish_style_and_type
+    if @type_list.blank?
+      @type_list=DishType.order('id desc')
+    end
+    if @style_list.blank?
+      @style_list=DishStyle.order('id desc')
+    end
   end
 
 # Never trust parameters from the scary internet, only allow the white list through.

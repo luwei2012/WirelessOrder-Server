@@ -99,7 +99,13 @@
             <td><%= f.text_field :size, :value => @table.size, :style => 'width:60px;', :onchange => 'validate(this.id)' %>
               人
             </td>
-
+          </tr>
+          <tr>
+            <td>当前状态:</td>
+            <td>
+              <% container = [[TABLE[0],0], [TABLE[1],1], [TABLE[2],2]] %>
+              <%= f.select :status, options_for_select(container, @table.status) %>
+            </td>
           </tr>
 
           <tr>

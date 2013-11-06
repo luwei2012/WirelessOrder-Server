@@ -12,6 +12,12 @@
         $("#div_detail").append(remarks);
 
     })
+    function before_submit() {
+        var remarks = $("#div_detail").html();
+        remarks = remarks.replace(/&nbsp;/g, " ").replace(/<br>/g, "\n");
+        $("#dish_remarks").val(remarks);
+        return true;
+    }
 
     function typeSelect(n) {
         var uri = "/tables/select_type?type=" + n;
@@ -112,14 +118,6 @@
         return false;
     }
 
-    function before_submit() {
-        var remarks = $("#div_detail").html();
-        remarks = remarks.replace(/&nbsp;/g, " ").replace(/<br>/g, "\n");
-        $("#dish_remarks").val(remarks);
-        return true;
-    }
-
-
 </script>
 
 <style>
@@ -187,7 +185,7 @@
           <tr>
             <td>菜系:</td>
             <td>
-              <%= f.select :dish_style_id, @dish_style_list.map { |u| [u.name, u.id] } %>
+              <%= f.select :dish_style_id, @style_list.map { |u| [u.name, u.id] } %>
             </td>
           </tr>
           <tr>
@@ -197,10 +195,23 @@
             </td>
           </tr>
           <tr>
+            <td>优惠:</td>
+            <td>
+              <%= f.select :sales, (0..10).step(0.1).map { |i| ['%.1f' % i, i/10] } %>&nbsp;折
+            </td>
+          </tr>
+          <tr>
             <td>做菜耗时:</td>
             <td>
               <%= f.text_field :cost_time, :value => @dish.cost_time, :style => 'width:60px;', :onchange => 'validate(this.id)' %>
               分钟
+            </td>
+          </tr>
+          <tr>
+            <td>当前状态:</td>
+            <td>
+              <% container = [[DISH[0], 0], [DISH[1], 1]] %>
+              <%= f.select :status, options_for_select(container, @dish.status) %>
             </td>
           </tr>
           <tr>

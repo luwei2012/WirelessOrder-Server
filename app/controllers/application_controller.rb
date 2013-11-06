@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     #logger.info "cookie is #{cookies.to_a}"
     #logger.info "version is#{request.env["HTTP_CVERSION"]}"
     #return if Rails.env != 'production'
-    return if Rails.env != 'production'
+    #return if Rails.env != 'production'
 
     if not session[:user_id]
       logger.info 'session timeout OR no cookies in request'

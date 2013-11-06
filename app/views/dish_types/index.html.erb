@@ -1,4 +1,4 @@
-<%= display_header(NAV1[:dish_style]) %>
+<%= display_header(NAV1[:dish_type]) %>
 
 <div
 <% if flash[:notice] %> class="alert"
@@ -10,7 +10,7 @@
 <script type="text/javascript">
     var validateRoot = "http://" + document.location.host;
     function changeStyle(n) {
-        var uri = "/dishes/select_style?style_id=" + n;
+        var uri = "/dishes/select_type?type=" + n;
         var xmlHttp = null;
         if (window.XMLHttpRequest) {// code for IE7, Firefox, Opera, etc.
             xmlHttp = new XMLHttpRequest();
@@ -34,13 +34,13 @@
 <div class="title-main">
   <div class="title-left">
     <% if @list.blank? %>
-        暂无菜系
+        暂无类别
     <% else %>
-        菜系列表
+        类别列表
     <% end %>
   </div>
   <div class="title-right">
-    <%= link_to '添加新菜系', '/dish_styles/new', :method => :get, :class => 'btn btn-large' %>
+    <%= link_to '添加新类别', '/dish_types/new', :method => :get, :class => 'btn btn-large' %>
   </div>
 </div>
 
@@ -54,7 +54,7 @@
   <% if @list.count > 0 %>
       <table class="table table-striped table-bordered">
         <thead>
-        <th width="15%">菜系</th>
+        <th width="15%">类别</th>
         <th width="50%">描述</th>
         <th width="20%">创建时间</th>
         <th>修改</th>
@@ -67,16 +67,16 @@
               </td>
 
               <td>
-                <%= link_to l.describe, "/dish_styles/#{l.id}" %>
+                <%= link_to l.describe, "/dish_types/#{l.id}" %>
               </td>
               <td>
                 <%= l.created_at.strftime('%Y年%m月%d日   %H:%M:%S') %></td>
               </td>
               <td>
-                <%= link_to '修改', "/dish_styles/#{l.id}/edit", :method => :get %>
+                <%= link_to '修改', "/dish_types/#{l.id}/edit", :method => :get %>
               </td>
               <td>
-                <%= link_to '删除', "/dish_styles/#{l.id}", :method => :delete, data: {confirm: "该菜系下所有菜品信息都会删除，\n确定要删除吗?"} %>
+                <%= link_to '删除', "/dish_types/#{l.id}", :method => :delete, data: {confirm: "该类别下所有菜品信息都会删除，\n确定要删除吗?"} %>
               </td>
             </tr>
         <% end %>

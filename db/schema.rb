@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131024093519) do
+ActiveRecord::Schema.define(version: 20131105104356) do
 
   create_table "dish_menus", force: true do |t|
     t.integer  "menu_id"
@@ -47,13 +47,13 @@ ActiveRecord::Schema.define(version: 20131024093519) do
     t.string   "imageUrl"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "sales"
+    t.float    "sales",         default: 1.0
     t.integer  "cost_time"
   end
 
   create_table "menus", force: true do |t|
     t.integer  "table_id"
-    t.float    "sales"
+    t.float    "sales",      default: 1.0
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(version: 20131024093519) do
     t.string   "password"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "role"
+    t.string   "role",       default: "普通用户"
     t.string   "phone"
   end
 

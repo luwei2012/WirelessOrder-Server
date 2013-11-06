@@ -1,2 +1,71 @@
-<h1>Authorities#index</h1>
-<p>Find me in app/views/authorities/index.html.erb</p>
+<%= display_header(NAV1[:authority]) %>
+<% if params[:role_id] %>
+    <% if params[:role_id].to_i == 2 %>
+        <%= display_authorities(USER_ROLE_NAME[:super_admin]) %>
+    <% elsif params[:role_id].to_i == 1 %>
+        <%= display_authorities(USER_ROLE_NAME[:normal_admin]) %>
+    <% elsif params[:role_id].to_i == 0 %>
+        <%= display_authorities(USER_ROLE_NAME[:normal_user]) %>
+    <% end %>
+<% else %>
+    <%= display_authorities(USER_ROLE_NAME[:all]) %>
+<% end %>
+
+<div
+<% if flash[:notice] %> class="alert"
+<% end %>>
+  <%= flash[:notice] %>
+</div>
+
+<div class="title-main">
+
+  <div class="title-left">
+    管理员
+  </div>
+  <div class="title-right">
+    <%= link_to '添加管理员', '/authorities/new', :method => :get, :class => 'btn btn-large' %>
+  </div>
+</div>
+
+<div style="clear: both;">
+
+  <% if @list.count > 0 %>
+      <table class="table table-striped table-bordered">
+        <thead>
+        <th>用户昵称</th>
+        <th>登陆名(账号)</th>
+        <th>用户角色</th>
+        <th>修改</th>
+        <th>删除</th>
+        </thead>
+        <% @list.each do |l| %>
+            <tr>
+              <td>
+                <%= l.name %>
+              </td>
+              <td>
+                <%= link_to l.account, "/authorities/#{l.id}" %>
+              </td>
+              <td>
+                <%= l.role %>
+              </td>
+              <% if l.role == ROLE_NAME[User::NORMAL_ADMIN] || l.role == ROLE_NAME[User::NORMAL_USER] %>
+                  <td>
+                    <%= link_to '修改', "/authorities/#{l.id}/edit", :method => :get %>
+                  </td>
+                  <td>
+                    <%= link_to '删除', "/authorities/#{l.id}", :method => :delete, :confirm => '确定要删除吗?' %>
+                  </td>
+              <% else %>
+                  <td>不可修改</td>
+                  <td>不可删除</td>
+              <% end %>
+            </tr>
+        <% end %>
+      </table>
+      <%= will_paginate @list, :previous_label => '上一页', :next_label => '下一页' %>
+  <% else %>
+      <div>没有找到数据</div>
+
+  <% end %>
+</div>

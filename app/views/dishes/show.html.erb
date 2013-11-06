@@ -98,7 +98,8 @@
 <script type="text/javascript">
 
     function return_index() {
-        window.history.back()
+        var root_url = "http://"+document.location.host ;
+        self.location = root_url + "/dishes";
     }
 
 </script>
@@ -163,6 +164,12 @@
         </td>
       </tr>
       <tr>
+        <td width="100">优惠:</td>
+        <td>
+          <%= @dish.sales*10%>折
+        </td>
+      </tr>
+      <tr>
         <td width="100">做菜耗时:</td>
         <td>
           <% if @dish.cost_time.blank? %>
@@ -181,11 +188,7 @@
       <tr>
         <td width="100">当前状态:</td>
         <td>
-          <% if @dish.status == 1 %>
-              可点
-          <% else %>
-              售完
-          <% end %>
+          <%= DISH[@dish.status]%>
         </td>
       </tr>
       <tr>

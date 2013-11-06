@@ -74,7 +74,7 @@ class Mobile::MTableController < Mobile::MoblieController
   #         1 成功 price：int 总价格
   def check_out
     begin
-      menu=Menu.find(params[:menu_id])
+      menu=Menu.find(params[:menu_id].to_i)
       if  menu.dish_menus.blank?
         #something is wrong ,please call the waiter
         render :json => {:result => 0, :message => '您尚未点菜，请先提交菜单，谢谢！'} and return
@@ -87,7 +87,7 @@ class Mobile::MTableController < Mobile::MoblieController
           menu.price=0
           menu.dish_menus.each do |dish_menu|
             dish = dish_menu.dish
-            menu.price+=dish_menu.amount*dish.sales*dish.price
+            menu.price=menu.price+dish_menu.amount*dish.sales*dish.price
           end
           Menu.transaction do
             menu.price=menu.price*menu.sales

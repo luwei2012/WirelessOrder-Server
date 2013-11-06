@@ -41,8 +41,9 @@
         }
         else {
             alert("Your browser does not support XMLHTTP.");
-        };
-        location.href='/dishes';
+        }
+        ;
+        location.href = '/dishes';
     }
 </script>
 <div
@@ -55,41 +56,40 @@
     <% if @type_list.blank? %>
         暂无分类
     <% else %>
-        <%= @type_list[session[:dish_type]].name %>
+        <% @type_list.each do |dish_type| %>
+            <% if dish_type.id == session[:dish_type] %>
+                <%= dish_type.name %>
+            <% end %>
+        <% end %>
     <% end %>
   </div>
   <div class="title-right">
     <% dish_style_array = @style_list.all.map { |dish_style| [dish_style.name, dish_style.id] } %>
     <% dish_style_array.unshift(['全部', -1]) %>
     <%= select_tag :name, options_for_select(dish_style_array, session[:dish_style]), :onchange => 'onStyleChange()', :id => 'dish_style_select' %>
-    <!--<%= collection_select(:dish_style, :dish_style_id, @style_list.all, :id, :name) %>-->
-    <%= link_to '添加新菜品', '/dishes/new', :method => :get, :class => 'btn btn-large' %>
+    <% if @type_list.blank? %>
+        <%= link_to '添加新菜品', '/dish_types/new', :method => :get, :class => 'btn btn-large' %>
+    <% elsif @style_list.blank? %>
+        <%= link_to '添加新菜品', '/dish_styles/new', :method => :get, :class => 'btn btn-large' %>
+    <% else %>
+        <%= link_to '添加新菜品', '/dishes/new', :method => :get, :class => 'btn btn-large' %>
+    <% end %>
+
   </div>
 </div>
 
-
-<!--t.string   "name"-->
-<!--t.integer  "dish_type_id"-->
-<!--t.integer  "price"-->
-<!--t.integer  "dish_style_id"-->
-<!--t.string   "remarks"-->
-<!--t.integer  "status"-->
-<!--t.integer  "count"-->
-<!--t.datetime "cost_time"-->
-<!--t.string   "imageUrl"-->
-<!--t.datetime "created_at"-->
-<!--t.datetime "updated_at"-->
-<!--t.float    "sales"-->
 
 <div style="clear: both; ">
   <% if @list.count > 0 %>
       <table class="table table-striped table-bordered">
         <thead>
         <th width="15%">菜品</th>
-        <th width="20%">价格</th>
-        <th width="20%">菜系</th>
+        <th width="10%">价格</th>
+        <th width="10%">菜系</th>
+        <th width="10%">优惠</th>
         <th>详细说明</th>
         <th>当前状态</th>
+        <th>修改</th>
         <th>删除</th>
         </thead>
         <% @list.each do |l| %>
@@ -109,14 +109,16 @@
                 <% end %>
               </td>
               <td>
+                <%= l.sales*10 %>折
+              </td>
+              <td>
                 <%= l.remarks %>
               </td>
               <td>
-                <% if l.status == 1 %>
-                    可点
-                <% else %>
-                    售完
-                <% end %>
+                <%= DISH[l.status] %>
+              </td>
+              <td>
+                <%= link_to '修改', "/dishes/#{l.id}/edit", :method => :get %>
               </td>
               <td>
                 <%= link_to '删除', "/dishes/#{l.id}", :method => :delete, data: {confirm: '确定要删除吗?'} %>
