@@ -36,6 +36,9 @@ WirelessOrder::Application.routes.draw do
     resources :m_dish do
       get 'dish_type_list', on: :collection
       get 'dish_style_list', on: :collection
+      get 'dish_type_list_on_sale', on: :collection
+      get 'dish_type_list_recommend', on: :collection
+
     end
 
     resources :m_table do
